@@ -8,10 +8,9 @@ data class User(
 ) {
     companion object {
         fun createNew(
-            id: String,
             name: String,
         ): User = User(
-            id = UserId(UUID.fromString(id)),
+            id = UserId.generateId(),
             name = name,
         )
     }

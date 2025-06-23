@@ -1,11 +1,8 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 val kotlinVersion = "2.1.21"
 val springBootVersion = "3.4.3"
 val jacksonDataformatXmlVersion = "2.15.2"
 val postgresqlVersion = "42.3.8"
 val liquibaseCoreVersion = "4.25.0"
-val testcontainersVersion = "1.17.3"
 val kotestVersion = "5.9.1"
 val keycloakVersion = "18.0.1"
 
