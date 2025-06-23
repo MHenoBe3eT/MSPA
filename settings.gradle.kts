@@ -6,5 +6,5 @@ rootProject.name = "mspa"
 include("domain")
 include("useCase")
 include("rest")
-include("persistence")
+include("infrastructure")
 include("application")

@@ -14,7 +14,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":useCase"))
     implementation(project(":rest"))
-    implementation(project(":persistence"))
+    implementation(project(":infrastructure"))
 
     implementation("jakarta.persistence:jakarta.persistence-api")
 
