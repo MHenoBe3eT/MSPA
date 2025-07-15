@@ -6,12 +6,12 @@ import java.util.*
 data class User(
     val id: UserId,
     val name: String,
-    val cardId: CardId,
+    val cardId: CardId?,
 ) {
     companion object {
         fun createNew(
             name: String,
-            cardId: CardId,
+            cardId: CardId? = null,
         ): User = User(
             id = UserId.generateId(),
             name = name,

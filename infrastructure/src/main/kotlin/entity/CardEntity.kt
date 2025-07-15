@@ -37,7 +37,7 @@ class CardEntity(
             return UserEntity(
                 id = user.id.value,
                 name = user.name,
-                cardId = user.cardId.value
+                cardId = user.cardId?.value
             )
         }
     }
