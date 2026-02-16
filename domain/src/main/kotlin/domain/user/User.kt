@@ -1,21 +1,26 @@
 package domain.user
 
-import domain.card.CardId
+import java.time.Instant
 import java.util.*
 
 data class User(
     val id: UserId,
+    val email: String,
+    val passwordHash: String,
     val name: String,
-    val cardId: CardId?,
+    val createdAt: Instant,
 ) {
     companion object {
         fun createNew(
+            email: String,
+            passwordHash: String,
             name: String,
-            cardId: CardId? = null,
         ): User = User(
             id = UserId.generateId(),
+            email = email,
+            passwordHash = passwordHash,
             name = name,
-            cardId = cardId,
+            createdAt = Instant.now(),
         )
     }
 }

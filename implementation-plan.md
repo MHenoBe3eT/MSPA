@@ -1,3 +1,5 @@
+main specification you can find at [spec.md]
+
 ## Implementation Plan
 
 ### Phase 0: Cleanup and Foundation

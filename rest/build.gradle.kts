@@ -22,21 +22,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("io.github.microutils:kotlin-logging-jvm:2.0.11")
 
-
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
-    implementation("javax.persistence:javax.persistence-api:2.2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    compileOnly("javax.servlet:javax.servlet-api:4.0.1")
-    implementation("javax.validation:validation-api:2.0.1.Final")
     implementation("jakarta.inject:jakarta.inject-api:2.0.1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-
-    implementation("io.ktor:ktor-client-core:2.3.12")
-    implementation("io.ktor:ktor-client-cio:2.3.12")
-    implementation("io.ktor:ktor-serialization-jackson:2.3.12")
-    implementation("io.ktor:ktor-client-content-negotiation:2.3.12")
 }
 
 openApiGenerate {

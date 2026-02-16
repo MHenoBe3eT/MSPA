@@ -1,6 +1,5 @@
 package controller
 
-import domain.card.CardId
 import domain.user.User
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -13,7 +12,11 @@ class UserController(
     private val createUser: CreateUser
 ) : UserControllerApi {
     override fun createUser(userDto: UserDto): ResponseEntity<UserDto> {
-        val user = User.createNew(userDto.name, userDto.cardId?.let { CardId(it) })
+        val user = User.createNew(
+            email = "",
+            passwordHash = "",
+            name = userDto.name,
+        )
         val result = createUser.create(user)
         return ResponseEntity(fromBusiness(result), HttpStatus.CREATED)
     }

@@ -1,18 +1,19 @@
 package user
 
-import domain.card.CardId
 import domain.user.User
 
 class CreateUserUseCase(
     private val createUser: CreateUser
 ) {
     operator fun invoke(
+        email: String,
+        passwordHash: String,
         name: String,
-        cardId: CardId,
     ): User {
         val user = User.createNew(
+            email = email,
+            passwordHash = passwordHash,
             name = name,
-            cardId = cardId,
         )
         return createUser.create(user)
     }

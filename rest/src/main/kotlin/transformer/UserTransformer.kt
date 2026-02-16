@@ -9,7 +9,6 @@ class UserTransformer {
             return UserDto(
                 id = user.id.value,
                 name = user.name,
-                cardId = user.cardId?.value
             )
         }
     }

@@ -4,7 +4,6 @@ val jacksonDataformatXmlVersion = "2.15.2"
 val postgresqlVersion = "42.3.8"
 val liquibaseCoreVersion = "4.25.0"
 val kotestVersion = "5.9.1"
-val keycloakVersion = "18.0.1"
 
 plugins {
     val kotlinVersion = "2.1.21"
@@ -40,7 +39,6 @@ allprojects {
             mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion") {
                 bomProperty("kotlin.version", kotlinVersion)
             }
-            mavenBom("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
         }
         dependencies {
             dependency("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -51,11 +49,7 @@ allprojects {
             dependency("io.github.microutils:kotlin-logging-jvm:3.0.5")
 
             dependency("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
-
-            dependency("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
             dependency("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
-            dependency("org.springframework.security:spring-security-oauth2-jose:6.3.3")
-            dependency("org.springframework.security:spring-security-oauth2-resource-server:6.3.3")
             dependency("org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}")
 
             dependency("org.springdoc:springdoc-openapi-starter-webmvc-api:2.6.0")
@@ -69,11 +63,8 @@ allprojects {
             dependency("jakarta.transaction:jakarta.transaction-api:2.0.1")
             dependency("jakarta.ejb:jakarta.ejb-api:4.0.1")
 
-            dependency("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
             dependency("org.springframework.boot:spring-boot-starter-validation:${springBootVersion}")
 
-
-            dependency("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
             dependency("org.postgresql:postgresql:${postgresqlVersion}")
             dependency("org.liquibase:liquibase-core:${liquibaseCoreVersion}")
             dependency("io.hypersistence:hypersistence-utils-hibernate-63:3.8.2")
@@ -104,9 +95,5 @@ allprojects {
         toolchain {
             languageVersion = JavaLanguageVersion.of(21)
         }
-    }
-
-    allOpen {
-        annotation("com.dss.annotation.AllOpenAnnotation")
     }
 }
