@@ -33,7 +33,7 @@ class UploadIntegrationTest {
     companion object {
         @Container
         @JvmStatic
-        val postgres = PostgreSQLContainer("postgres:16-alpine")
+        val postgres = PostgreSQLContainer("postgres:16")
             .withDatabaseName("mspa_test")
             .withUsername("test")
             .withPassword("test")
