@@ -2,12 +2,14 @@ package ai
 
 import domain.DocumentType
 import mu.KotlinLogging
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 private val log = KotlinLogging.logger {}
 
 @Component
+@ConditionalOnProperty(name = ["mspa.ai.provider"], havingValue = "stub", matchIfMissing = true)
 class StubAiDocumentProvider : AiDocumentProvider {
 
     override val modelVersion: String = "stub-1.0"

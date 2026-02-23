@@ -143,3 +143,65 @@
 
 54. **401** — запросы `GET /documents` и `GET /documents/{id}` без токена → Unauthorized
 55. **404** — `GET /documents/00000000-0000-0000-0000-000000000000` с валидным токеном → Not Found
+
+---
+
+## Phase 5 — Database Schema (Liquibase)
+
+### Integration-тесты (`LiquibaseMigrationIntegrationTest.kt`)
+
+> Инфраструктура: Testcontainers PostgreSQL
+> Метод проверки: запросы к `information_schema` и системным каталогам PostgreSQL
+
+#### Таблицы
+
+56. **Все таблицы существуют** — после применения Liquibase миграций присутствуют все 9 таблиц: `users`, `documents`, `uploaded_files`, `ai_processing_results`, `medical_documents`, `lab_analysis_data`, `visit_protocol_data`, `instrumental_study_data`, `ai_interpretations`
+
+#### Колонки
+
+57. **users** — таблица содержит колонки: `id`, `email`, `password_hash`, `name`, `created_at`
+58. **uploaded_files** — таблица содержит колонки: `id`, `user_id`, `original_file_name`, `content_type`, `size_bytes`, `checksum`, `storage_key`, `status`, `uploaded_at`
+59. **medical_documents** — таблица содержит колонки: `id`, `uploaded_file_id`, `user_id`, `document_type`, `status`, `title`, `document_date`, `created_at`
+60. **ai_processing_results** — таблица содержит колонки: `id`, `uploaded_file_id`, `raw_extracted_text`, `model_version`, `processed_at`
+61. **ai_interpretations** — таблица содержит колонки: `id`, `medical_document_id`, `interpretation_text`, `risk_markers`, `disclaimer`, `model_version`
+62. **visit_protocol_data** — таблица содержит колонки: `id`, `medical_document_id`, `narrative_text`, `complaints`, `anamnesis`, `diagnosis`, `treatment_plan`
+63. **instrumental_study_data** — таблица содержит колонки: `id`, `medical_document_id`, `description`, `findings`
+
+#### Типы JSONB
+
+64. **lab_analysis_data.indicators** — колонка имеет тип `jsonb`
+65. **ai_interpretations.risk_markers** — колонка имеет тип `jsonb`
+66. **instrumental_study_data.findings** — колонка имеет тип `jsonb`
+
+#### Индексы
+
+67. **Все индексы существуют** — присутствуют индексы: `idx_uploaded_files_user_id`, `idx_uploaded_files_checksum_user_id`, `idx_medical_documents_user_id`, `idx_medical_documents_uploaded_file_id`
+
+#### Ограничения
+
+68. **UNIQUE на users.email** — колонка `email` таблицы `users` имеет ограничение `UNIQUE`
+
+---
+
+### Integration-тесты (`AiProcessingIntegrationTest.kt`)
+
+> Инфраструктура: Testcontainers PostgreSQL + MinIO
+> Stub AI-провайдер создаёт 1 документ типа `LAB_ANALYSIS` с 4 индикаторами и интерпретацией
+
+#### Переходы статусов
+
+69. **Статус UPLOADED сразу после загрузки** — `POST /uploaded-files` возвращает 202 со статусом `UPLOADED`
+70. **Переход в PROCESSED после обработки** — после async AI-обработки `GET /uploaded-files/{id}` возвращает статус `PROCESSED`
+
+#### Создание документов
+
+71. **Создание MedicalDocument** — после обработки `GET /documents` возвращает массив с как минимум одним документом
+72. **Структурированные данные и интерпретация** — `GET /documents/{id}` содержит непустые блоки `labData.indicators` (массив) и `interpretation` с полями `interpretationText` и `disclaimer`
+
+#### Статус файла
+
+73. **GET /uploaded-files/{id} после обработки** — возвращает 200 со статусом `PROCESSED`
+
+#### Изоляция данных
+
+74. **Документы изолированы между пользователями** — документы, созданные при загрузке файла первым пользователем, не видны второму пользователю (`GET /documents` возвращает пустой массив)

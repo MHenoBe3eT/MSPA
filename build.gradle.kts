@@ -1,5 +1,6 @@
 val kotlinVersion = "2.1.21"
 val springBootVersion = "3.4.3"
+val springAiVersion = "1.0.0"
 val jacksonDataformatXmlVersion = "2.15.2"
 val postgresqlVersion = "42.3.8"
 val liquibaseCoreVersion = "4.25.0"
@@ -32,6 +33,7 @@ allprojects {
 
     repositories {
         mavenCentral()
+        maven { url = uri("https://repo.spring.io/milestone") }
     }
 
     dependencyManagement {
@@ -39,6 +41,7 @@ allprojects {
             mavenBom("org.springframework.boot:spring-boot-dependencies:$springBootVersion") {
                 bomProperty("kotlin.version", kotlinVersion)
             }
+            mavenBom("org.springframework.ai:spring-ai-bom:$springAiVersion")
         }
         dependencies {
             dependency("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")

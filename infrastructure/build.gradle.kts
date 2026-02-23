@@ -24,6 +24,8 @@ dependencies {
 
     implementation("io.minio:minio:8.5.12")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    implementation("org.springframework.ai:spring-ai-starter-model-deepseek")
 }
 
 tasks.getByName<BootJar>("bootJar") {

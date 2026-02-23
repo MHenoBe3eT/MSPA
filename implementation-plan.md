@@ -210,6 +210,8 @@ In practice, migrations are written alongside each phase.
 #### Test Infrastructure
 - `IntegrationTestBase.kt` — Testcontainers (PostgreSQL + MinIO), `@SpringBootTest`, `@DynamicPropertySource`
 
+> **TODO**: `IntegrationTestBase.kt` не реализован. Каждый интеграционный тест (`AuthIntegrationTest`, `UploadIntegrationTest`, `DocumentIntegrationTest`, `AiProcessingIntegrationTest`) дублирует объявление контейнеров и `@DynamicPropertySource`. Необходимо вынести общую инфраструктуру в базовый класс и отнаследовать все интеграционные тесты от него.
+
 #### Test Cases
 1. **Auth**: register, duplicate email, login, wrong password, protected endpoint without token
 2. **Upload**: valid PDF → 202, file > 10MB → 400, unsupported format → 400, duplicate → return existing
