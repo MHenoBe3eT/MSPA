@@ -23,6 +23,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
     implementation("io.minio:minio:8.5.12")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 }
 
 tasks.getByName<BootJar>("bootJar") {

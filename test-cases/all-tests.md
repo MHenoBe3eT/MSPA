@@ -99,3 +99,16 @@
 
 41. **401** — запрос без токена → Unauthorized
 42. **404** — несуществующий `id` → Not Found
+
+---
+
+## Phase 3 — AI Abstraction + Asynchronous Pipeline
+
+### Unit-тесты (`ProcessUploadedFileUseCaseTest.kt`)
+
+43. **Переходы статусов при успехе** — файл проходит UPLOADED → PROCESSING → PROCESSED: `UpdateUploadedFileStatus.update()` вызывается ровно дважды в правильном порядке
+44. **Создание N документов** — AI возвращает N `ExtractedDocument` → создаётся ровно N `MedicalDocument`, каждый с корректным `documentType`, `status=PROCESSED`, `userId`, `uploadedFileId`
+45. **Сохранение структурированных данных** — для документа типа `LAB_ANALYSIS` вызывается `SaveLabAnalysisData.save()` с корректными индикаторами (имя, значение, единица)
+46. **Интерпретация для каждого документа** — `SaveAiInterpretation.save()` вызывается ровно N раз (по одному на каждый извлечённый документ)
+47. **Переход в ERROR при сбое AI** — `AiDocumentProvider.processDocument()` бросает исключение → статус становится ERROR, `SaveMedicalDocument.save()` не вызывается, исключение пробрасывается наверх
+48. **Метаданные передаются в AI** — `AiDocumentProvider.processDocument()` получает правильный `contentType` и `originalFileName` из `UploadedFile`
