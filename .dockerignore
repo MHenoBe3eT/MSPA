@@ -1,0 +1,15 @@
+.gradle
+build/
+domain/build/
+useCase/build/
+rest/build/
+infrastructure/build/
+application/build/
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.git/
+test-cases/
+*.md
