@@ -167,7 +167,7 @@ class DeepSeekAiDocumentProvider(chatClientBuilder: ChatClient.Builder) : AiDocu
             - Return ONLY valid JSON, nothing else
             - documentDate must be YYYY-MM-DD (use today if unknown)
             - riskMarkers is [] when no abnormalities found
-            - All text fields must be in the same language as the document
+            - All text fields must be in english language
             - disclaimer must state that results are informational only and not medical advice
         """.trimIndent()
     }
