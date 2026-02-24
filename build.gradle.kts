@@ -55,8 +55,8 @@ allprojects {
             dependency("org.springframework.boot:spring-boot-starter-security:${springBootVersion}")
             dependency("org.springframework.boot:spring-boot-starter-websocket:${springBootVersion}")
 
-            dependency("org.springdoc:springdoc-openapi-starter-webmvc-api:2.6.0")
-            dependency("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+            dependency("org.springdoc:springdoc-openapi-starter-webmvc-api:2.7.0")
+            dependency("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 
             dependency("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
 
