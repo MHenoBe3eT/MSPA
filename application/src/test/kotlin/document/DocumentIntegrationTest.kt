@@ -123,9 +123,11 @@ class DocumentIntegrationTest {
                 .header("Authorization", "Bearer $authToken")
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$").isArray)
-            .andExpect(jsonPath("$[0].id").isNotEmpty)
-            .andExpect(jsonPath("$[0].documentType").value("LAB_ANALYSIS"))
+            .andExpect(jsonPath("$.content").isArray)
+            .andExpect(jsonPath("$.content[0].id").isNotEmpty)
+            .andExpect(jsonPath("$.content[0].documentType").value("LAB_ANALYSIS"))
+            .andExpect(jsonPath("$.totalElements").isNumber)
+            .andExpect(jsonPath("$.page").value(0))
     }
 
     // Тест-кейс 42: GET /documents?type=LAB_ANALYSIS — фильтр по типу
@@ -138,15 +140,15 @@ class DocumentIntegrationTest {
                 .header("Authorization", "Bearer $authToken")
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$").isArray)
-            .andExpect(jsonPath("$[0].documentType").value("LAB_ANALYSIS"))
+            .andExpect(jsonPath("$.content").isArray)
+            .andExpect(jsonPath("$.content[0].documentType").value("LAB_ANALYSIS"))
 
         mockMvc.perform(
             get("/documents?type=VISIT_PROTOCOL")
                 .header("Authorization", "Bearer $authToken")
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$").isArray)
+            .andExpect(jsonPath("$.content").isArray)
     }
 
     // Тест-кейс 43: GET /documents/{id} — детали документа с интерпретацией
@@ -160,7 +162,7 @@ class DocumentIntegrationTest {
         ).andReturn()
 
         val documents = objectMapper.readTree(listResult.response.contentAsString)
-        val documentId = documents[0].get("id").asText()
+        val documentId = documents.get("content")[0].get("id").asText()
 
         mockMvc.perform(
             get("/documents/$documentId")
@@ -186,7 +188,7 @@ class DocumentIntegrationTest {
                 .header("Authorization", "Bearer $authToken")
         ).andReturn()
 
-        val documentId = objectMapper.readTree(listResult.response.contentAsString)[0].get("id").asText()
+        val documentId = objectMapper.readTree(listResult.response.contentAsString).get("content")[0].get("id").asText()
 
         mockMvc.perform(
             patch("/documents/$documentId")
@@ -217,7 +219,7 @@ class DocumentIntegrationTest {
                 .header("Authorization", "Bearer $authToken")
         ).andReturn()
 
-        val documentId = objectMapper.readTree(listResult.response.contentAsString)[0].get("id").asText()
+        val documentId = objectMapper.readTree(listResult.response.contentAsString).get("content")[0].get("id").asText()
 
         mockMvc.perform(
             delete("/documents/$documentId")

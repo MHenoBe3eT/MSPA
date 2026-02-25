@@ -151,7 +151,7 @@ class AiProcessingIntegrationTest {
         ).andExpect(status().isOk).andReturn()
 
         val documents = objectMapper.readTree(documentsResult.response.contentAsString)
-        assertTrue(documents.isArray && documents.size() > 0, "At least one MedicalDocument should be created after processing")
+        assertTrue(documents.get("content").size() > 0, "At least one MedicalDocument should be created after processing")
     }
 
     // Тест-кейс 54: каждый документ имеет структурированные данные (labData) и интерпретацию с disclaimer
@@ -166,9 +166,9 @@ class AiProcessingIntegrationTest {
         ).andReturn()
 
         val documents = objectMapper.readTree(listResult.response.contentAsString)
-        assertTrue(documents.size() > 0, "Expected at least one document")
+        assertTrue(documents.get("content").size() > 0, "Expected at least one document")
 
-        val documentId = documents[0].get("id").asText()
+        val documentId = documents.get("content")[0].get("id").asText()
 
         mockMvc.perform(
             get("/documents/$documentId")
@@ -230,6 +230,6 @@ class AiProcessingIntegrationTest {
         ).andExpect(status().isOk).andReturn()
 
         val user2Docs = objectMapper.readTree(user2DocsResult.response.contentAsString)
-        assertEquals(0, user2Docs.size(), "Second user should have no documents")
+        assertEquals(0, user2Docs.get("content").size(), "Second user should have no documents")
     }
 }

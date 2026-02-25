@@ -5,6 +5,7 @@ import file.TriggerAiProcessing
 import mu.KotlinLogging
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 private val log = KotlinLogging.logger {}
 
@@ -14,6 +15,7 @@ class AsyncAiProcessingTrigger(
 ) : TriggerAiProcessing {
 
     @Async
+    @Transactional
     override fun trigger(uploadedFileId: UploadedFileId) {
         log.info { "Triggering async AI processing for file ${uploadedFileId.value}" }
         processUploadedFileUseCase(uploadedFileId)
