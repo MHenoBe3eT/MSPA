@@ -9,11 +9,14 @@ import java.time.LocalDate
 
 interface GetMedicalDocument {
     fun byId(id: MedicalDocumentId): MedicalDocument
+    fun byId(id: MedicalDocumentId, userId: UserId): MedicalDocument
     fun byUserId(
         userId: UserId,
         type: DocumentType? = null,
         startDate: LocalDate? = null,
         endDate: LocalDate? = null,
-    ): List<MedicalDocument>
+        page: Int = 0,
+        size: Int = 20,
+    ): PagedResult<MedicalDocument>
     fun byUploadedFileId(uploadedFileId: UploadedFileId): List<MedicalDocument>
 }

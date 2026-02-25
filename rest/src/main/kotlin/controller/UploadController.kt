@@ -47,7 +47,8 @@ class UploadController(
         @PathVariable id: UUID,
         authentication: Authentication,
     ): ResponseEntity<UploadedFileResponse> {
-        val file = getUploadedFile.byId(UploadedFileId(id))
+        val userId = authentication.principal as UserId
+        val file = getUploadedFile.byId(UploadedFileId(id), userId)
         return ResponseEntity.ok(UploadedFileResponse.fromDomain(file))
     }
 
@@ -56,7 +57,8 @@ class UploadController(
         @PathVariable id: UUID,
         authentication: Authentication,
     ): ResponseEntity<ByteArray> {
-        val file = getUploadedFile.byId(UploadedFileId(id))
+        val userId = authentication.principal as UserId
+        val file = getUploadedFile.byId(UploadedFileId(id), userId)
         val data = fileStorage.retrieve(file.storageKey)
         return ResponseEntity.ok()
             .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"${file.originalFileName}\"")

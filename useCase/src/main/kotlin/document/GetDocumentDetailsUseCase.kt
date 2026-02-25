@@ -2,6 +2,7 @@ package document
 
 import domain.DocumentType
 import domain.document.MedicalDocumentId
+import domain.user.UserId
 
 class GetDocumentDetailsUseCase(
     private val getMedicalDocument: GetMedicalDocument,
@@ -10,8 +11,8 @@ class GetDocumentDetailsUseCase(
     private val getVisitProtocolData: GetVisitProtocolData,
     private val getInstrumentalStudyData: GetInstrumentalStudyData,
 ) {
-    operator fun invoke(id: MedicalDocumentId): DocumentDetails {
-        val document = getMedicalDocument.byId(id)
+    operator fun invoke(id: MedicalDocumentId, userId: UserId): DocumentDetails {
+        val document = getMedicalDocument.byId(id, userId)
         val interpretation = getAiInterpretation.byMedicalDocumentId(id)
         val structuredData = when (document.documentType) {
             DocumentType.LAB_ANALYSIS -> getLabAnalysisData.byMedicalDocumentId(id)

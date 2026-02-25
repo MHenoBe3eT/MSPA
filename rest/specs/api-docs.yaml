@@ -6,37 +6,7 @@ servers:
   - url: http://localhost:8080
     description: Generated server url
 
-paths:
-  /user:
-    post:
-      tags:
-        - user-controller
-      summary: Создать пользователя
-      operationId: createUser
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserDto'
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            'application/json':
-              schema:
-                $ref: '#/components/schemas/UserDto'
+paths: {}
 
 components:
-  schemas:
-
-    UserDto:
-      required:
-        - name
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
+  schemas: {}

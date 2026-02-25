@@ -1,5 +1,11 @@
 package controller
 
+import document.DeleteMedicalDocumentUseCase
+import document.DocumentDetails
+import document.GetDocumentDetailsUseCase
+import document.GetMedicalDocument
+import document.PagedResult
+import document.UpdateDocumentTypeUseCase
 import domain.DocumentType
 import domain.document.AiInterpretation
 import domain.document.InstrumentalStudyData
@@ -8,11 +14,6 @@ import domain.document.MedicalDocument
 import domain.document.MedicalDocumentId
 import domain.document.VisitProtocolData
 import domain.user.UserId
-import document.DeleteMedicalDocumentUseCase
-import document.DocumentDetails
-import document.GetDocumentDetailsUseCase
-import document.GetMedicalDocument
-import document.UpdateDocumentTypeUseCase
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -40,14 +41,16 @@ class DocumentController(
         @RequestParam(required = false) type: String?,
         @RequestParam(required = false) startDate: String?,
         @RequestParam(required = false) endDate: String?,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "20") size: Int,
         authentication: Authentication,
-    ): ResponseEntity<List<MedicalDocumentResponse>> {
+    ): ResponseEntity<PagedResponse<MedicalDocumentResponse>> {
         val userId = authentication.principal as UserId
         val documentType = type?.let { DocumentType.valueOf(it) }
         val start = startDate?.let { LocalDate.parse(it) }
         val end = endDate?.let { LocalDate.parse(it) }
-        val documents = getMedicalDocument.byUserId(userId, documentType, start, end)
-        return ResponseEntity.ok(documents.map(MedicalDocumentResponse::fromDomain))
+        val result = getMedicalDocument.byUserId(userId, documentType, start, end, page, size)
+        return ResponseEntity.ok(PagedResponse.from(result, MedicalDocumentResponse::fromDomain))
     }
 
     @GetMapping("/{id}")
@@ -55,7 +58,8 @@ class DocumentController(
         @PathVariable id: UUID,
         authentication: Authentication,
     ): ResponseEntity<DocumentDetailsResponse> {
-        val details = getDocumentDetailsUseCase(MedicalDocumentId(id))
+        val userId = authentication.principal as UserId
+        val details = getDocumentDetailsUseCase(MedicalDocumentId(id), userId)
         return ResponseEntity.ok(DocumentDetailsResponse.fromDomain(details))
     }
 
@@ -65,7 +69,8 @@ class DocumentController(
         @RequestBody request: UpdateDocumentTypeRequest,
         authentication: Authentication,
     ): ResponseEntity<MedicalDocumentResponse> {
-        val document = updateDocumentTypeUseCase(MedicalDocumentId(id), DocumentType.valueOf(request.documentType))
+        val userId = authentication.principal as UserId
+        val document = updateDocumentTypeUseCase(MedicalDocumentId(id), DocumentType.valueOf(request.documentType), userId)
         return ResponseEntity.ok(MedicalDocumentResponse.fromDomain(document))
     }
 
@@ -74,7 +79,8 @@ class DocumentController(
         @PathVariable id: UUID,
         authentication: Authentication,
     ): ResponseEntity<Void> {
-        deleteMedicalDocumentUseCase(MedicalDocumentId(id))
+        val userId = authentication.principal as UserId
+        deleteMedicalDocumentUseCase(MedicalDocumentId(id), userId)
         return ResponseEntity.noContent().build()
     }
 }
@@ -211,3 +217,21 @@ data class InstrumentalStudyDataResponse(
 }
 
 data class UpdateDocumentTypeRequest(val documentType: String)
+
+data class PagedResponse<T>(
+    val content: List<T>,
+    val totalElements: Long,
+    val totalPages: Int,
+    val page: Int,
+    val size: Int,
+) {
+    companion object {
+        fun <T, R> from(result: PagedResult<T>, mapper: (T) -> R) = PagedResponse(
+            content = result.content.map(mapper),
+            totalElements = result.totalElements,
+            totalPages = result.totalPages,
+            page = result.page,
+            size = result.size,
+        )
+    }
+}
